@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF AI - StudyLift</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <h1>PDF AI 📚</h1>
+    <button onclick="goBack()">Back</button>
+</nav>
+
+<div class="upload-box">
+    <input type="file" id="pdfFile">
+    <button onclick="uploadPDF()">Upload & Summarize</button>
+</div>
+
+<div id="output" class="chat-box"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

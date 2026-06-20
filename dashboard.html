@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - StudyLift AI</title>
+    <link rel="stylesheet" href="frontend.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1>StudyLift AI Dashboard</h1>
+        <div>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-copy">
+            <h2>Welcome Back 👋</h2>
+            <p>Your AI study tools are ready for today’s session.</p>
+            <div id="ai-status" class="ai-status">Checking AI mode...</div>
+        </div>
+    </section>
+
+    <section class="dashboard-grid">
+        <div class="panel panel-large">
+            <h3>💬 AI Study Chat</h3>
+            <div id="chat-box" class="chat-box"></div>
+            <div class="input-area">
+                <input id="user-input" type="text" placeholder="Ask anything about your studies">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h3>📄 Upload PDF</h3>
+            <input type="file" id="pdfFile">
+            <button onclick="uploadPDF()">Summarize</button>
+            <pre id="output">Upload a PDF to get a quick summary.</pre>
+        </div>
+
+        <div class="panel">
+            <h3>🧠 Quiz Generator</h3>
+            <textarea id="text" placeholder="Paste your notes or a topic here..."></textarea>
+            <button onclick="generateQuiz()">Generate Quiz</button>
+            <pre id="quiz-output">Your quiz will appear here.</pre>
+        </div>
+
+        <div class="panel panel-wide">
+            <h3>� Study Streak</h3>
+            <div id="streak-info" class="streak-info">Loading your streak...</div>
+            <h3>�🗂️ Recent Study Activity</h3>
+            <div id="history-list" class="history-list">Loading your latest study activity...</div>
+        </div>
+    </section>
+
+    <script src="frontend.js"></script>
+</body>
+</html>

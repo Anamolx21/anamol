@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - StudyLift AI</title>
+    <link rel="stylesheet" href="frontend.css">
+</head>
+<body>
+    <div class="login-box">
+        <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+            <button class="theme-toggle" onclick="toggleTheme()" style="padding:6px 10px;">🌙 Dark Mode</button>
+        </div>
+        <h2>Login to StudyLift AI</h2>
+        <p class="login-subtext">Use your student account to continue learning.</p>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <p id="msg"></p>
+        <p><a href="index.html">Back to home</a></p>
+    </div>
+
+    <script src="frontend.js"></script>
+</body>
+</html>

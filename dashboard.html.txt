@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - StudyLift AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <h1>StudyLift AI Dashboard</h1>
+    <button onclick="logout()">Logout</button>
+</nav>
+
+<section class="hero">
+    <h2>Welcome Back 👋</h2>
+    <p>Your AI study tools are ready.</p>
+</section>
+
+<section class="features">
+    <div class="card">📚 AI Notes</div>
+    <div class="card">🧠 Quiz Generator</div>
+    <div class="card">📊 Progress Tracker</div>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
+<div class="card" onclick="window.location.href='chat.html'">
+    🤖 AI Chat
+</div>
+<div class="card" onclick="window.location.href='pdf.html'">
+    📄 PDF AI Summary
+</div>
+<div class="card" onclick="window.location.href='quiz.html'">
+    🧠 AI Quiz Generator
+</div>
+<div class="card"
+     onclick="window.location.href='flashcards.html'">
+    🃏 AI Flashcards
+</div>

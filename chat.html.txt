@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>StudyLift AI Chat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <h1>StudyLift AI Chat 🤖</h1>
+    <button onclick="goBack()">Back</button>
+</nav>
+
+<div class="chat-box" id="chat-box"></div>
+
+<div class="input-area">
+    <input type="text" id="user-input" placeholder="Ask anything...">
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
+from models import Chat
+
+@app.post("/chat")
+def chat(data: dict):
+    db = SessionLocal()
+
+    message = data.get("message")
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": "You are StudyLift AI."},
+            {"role": "user", "content": message}
+        ]
+    )
+
+    reply = response.choices[0].message.content
+
+    # SAVE TO DATABASE
+    chat_entry = Chat(
+        user="admin",
+        message=message,
+        response=reply
+    )
+
+    db.add(chat_entry)
+    db.commit()
+
+    return {"reply": reply}

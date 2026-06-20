@@ -1,0 +1,229 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+# allow frontend to connect
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# fake user database (for now)
+users = {
+    "admin": "1234",
+    "student": "study"
+}
+
+@app.post("/login")
+def login(data: dict):
+    username = data.get("username")
+    password = data.get("password")
+
+    if username in users and users[username] == password:
+        return {"success": True, "message": "Login successful"}
+    
+    return {"success": False, "message": "Invalid credentials"}
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.post("/chat")
+def chat(data: dict):
+    message = data.get("message")
+
+    # simple AI logic (we will upgrade later)
+    response = ""
+
+    if "math" in message.lower():
+        response = "Try breaking the problem into smaller steps."
+    elif "study" in message.lower():
+        response = "Make a timetable and revise daily."
+    elif "hello" in message.lower():
+        response = "Hello! I'm StudyLift AI 🤖"
+    else:
+        response = "I am still learning. Soon I will become smarter!"
+
+    return {"reply": response}
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from openai import OpenAI
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# 🔑 Put your API key here
+client = OpenAI(api_key="YOUR_API_KEY_HERE")
+
+
+@app.post("/chat")
+def chat(data: dict):
+    message = data.get("message")
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": "You are StudyLift AI, a helpful study assistant for students."},
+            {"role": "user", "content": message}
+        ]
+    )
+
+    return {
+        "reply": response.choices[0].message.content
+    }
+from fastapi import UploadFile, File
+from pypdf import PdfReader
+from openai import OpenAI
+import io
+client = OpenAI(api_key="YOUR_API_KEY_HERE")
+
+
+@app.post("/upload-pdf")
+async def upload_pdf(file: UploadFile = File(...)):
+    # Read PDF
+    content = await file.read()
+    reader = PdfReader(io.BytesIO(content))
+
+    text = ""
+
+    for page in reader.pages:
+        text += page.extract_text() or ""
+
+    # Limit text (important for AI cost)
+    text = text[:3000]
+
+    # Send to AI
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are StudyLift AI. Summarize study material into simple notes, key points, and exam revision format."
+            },
+            {
+                "role": "user",
+                "content": f"Summarize this PDF content:\n\n{text}"
+            }
+        ]
+    )
+
+    return {
+        "summary": response.choices[0].message.content
+    }
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from openai import OpenAI
+
+app = FastAPI()
+
+client = OpenAI(api_key="YOUR_API_KEY_HERE")
+@app.post("/generate-quiz")
+def generate_quiz(data: dict):
+    text = data.get("text")
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are StudyLift AI. Create quizzes from study material. Give 5 MCQs with options A-D and correct answers at the end."
+            },
+            {
+                "role": "user",
+                "content": f"Create a quiz from this content:\n\n{text}"
+            }
+        ]
+    )
+
+    return {
+        "quiz": response.choices[0].message.content
+    }
+from fastapi import FastAPI
+from database import engine
+from models import Base
+
+Base.metadata.create_all(bind=engine)
+from database import SessionLocal
+from models import User
+@app.post("/login")
+def login(data: dict):
+    db = SessionLocal()
+
+    username = data.get("username")
+    password = data.get("password")
+
+    user = db.query(User).filter(User.username == username).first()
+
+    if user:
+        if user.password == password:
+            return {"success": True, "message": "Login successful"}
+        return {"success": False, "message": "Wrong password"}
+
+    return {"success": False, "message": "User not found"}
+@app.post("/register")
+def register(data: dict):
+    db = SessionLocal()
+
+    username = data.get("username")
+    password = data.get("password")
+
+    existing = db.query(User).filter(User.username == username).first()
+
+    if existing:
+        return {"success": False, "message": "User already exists"}
+
+    new_user = User(username=username, password=password)
+    db.add(new_user)
+    db.commit()
+
+    return {"success": True, "message": "User created"}
+@app.post("/flashcards")
+def flashcards(data: dict):
+
+    text = data.get("text")
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "system",
+                "content": """
+Create study flashcards.
+
+Format:
+Q: question
+A: answer
+
+Create 10 flashcards.
+"""
+            },
+            {
+                "role": "user",
+                "content": text
+            }
+        ]
+    )
+
+    return {
+        "flashcards":
+        response.choices[0].message.content
+    }
